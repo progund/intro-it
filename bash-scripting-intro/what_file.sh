@@ -41,6 +41,11 @@ xxd -l32 -c32 -g1 "$file" | cut -d ' ' -f2-34|grep -q "$JPG" && ((JPG_SCORE++))
 xxd -l16 "$file" | grep -q "$SQLITE3" && ((SQLITE3_SCORE++))
 
 filetype="unknown"
+
+#  The below is not an example on how to use or write
+#+ tests using if. It's a pragmatic way of seeing what
+#+ tests were successful.
+
 if $TEXT_FILE
 then
     echo -n "Possible text file "
