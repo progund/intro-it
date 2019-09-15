@@ -25,6 +25,7 @@ ZIP_SCORE=0
 GZIP_SCORE=0
 JPG_SCORE=0
 SQLITE3_SCORE=0
+UTF_SCORE=0
 
 xxd -l32 -c32 -g1 "$file" |
     cut -d ' ' -f2-34 |
@@ -39,6 +40,7 @@ xxd -l32 -c32 -g1 "$file" | cut -d ' ' -f2-34|grep -q "$ZIP" && ((ZIP_SCORE++))
 xxd -l32 -c32 -g1 "$file" | cut -d ' ' -f2-34|grep -q "$GZIP" && ((GZIP_SCORE++))
 xxd -l32 -c32 -g1 "$file" | cut -d ' ' -f2-34|grep -q "$JPG" && ((JPG_SCORE++))
 xxd -l16 "$file" | grep -q "$SQLITE3" && ((SQLITE3_SCORE++))
+xxd -l32 -g1 "$file" |cut -d ':' -f2- | cut -d ' ' -f2-17 | egrep -q 'c[2-9a-f] 8[0-9a-f]|c[2-9a-f] 9[0-9a-f]|c[2-9a-f] a[0-9a-f]|c[0-9a-f] b[0-9a-f]|c[0-9a-f] c[0-9a-f]|c[0-9a-f] d[0-9a-f]' && ((UTF_SCORE++))
 
 filetype="unknown"
 
@@ -90,6 +92,11 @@ fi
 if (( GZIP_SCORE > 0 ))
 then
     filetype="gzip compressed file"
+fi
+
+if (( UTF_SCORE > 0 ))
+then
+    filetype="Possible UTF-8 text"
 fi
 
 echo "$file: $filetype"
